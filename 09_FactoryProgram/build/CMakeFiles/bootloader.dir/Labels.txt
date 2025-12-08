@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+/home/warden/Desktop/ESP32-S3-LCD-3.16-Demo/ESP-IDF/09_FactoryProgram/build/CMakeFiles/bootloader
+/home/warden/Desktop/ESP32-S3-LCD-3.16-Demo/ESP-IDF/09_FactoryProgram/build/CMakeFiles/bootloader.rule
+/home/warden/Desktop/ESP32-S3-LCD-3.16-Demo/ESP-IDF/09_FactoryProgram/build/CMakeFiles/bootloader-complete.rule
+/home/warden/Desktop/ESP32-S3-LCD-3.16-Demo/ESP-IDF/09_FactoryProgram/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+/home/warden/Desktop/ESP32-S3-LCD-3.16-Demo/ESP-IDF/09_FactoryProgram/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/home/warden/Desktop/ESP32-S3-LCD-3.16-Demo/ESP-IDF/09_FactoryProgram/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/home/warden/Desktop/ESP32-S3-LCD-3.16-Demo/ESP-IDF/09_FactoryProgram/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/home/warden/Desktop/ESP32-S3-LCD-3.16-Demo/ESP-IDF/09_FactoryProgram/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/home/warden/Desktop/ESP32-S3-LCD-3.16-Demo/ESP-IDF/09_FactoryProgram/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/home/warden/Desktop/ESP32-S3-LCD-3.16-Demo/ESP-IDF/09_FactoryProgram/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule

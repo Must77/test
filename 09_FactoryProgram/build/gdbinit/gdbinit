@@ -1,0 +1,2 @@
+source /home/warden/Desktop/ESP32-S3-LCD-3.16-Demo/ESP-IDF/09_FactoryProgram/build/gdbinit/symbols
+source /home/warden/Desktop/ESP32-S3-LCD-3.16-Demo/ESP-IDF/09_FactoryProgram/build/gdbinit/connect

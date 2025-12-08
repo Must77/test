@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "esp-idf/lcd_bl_pwm_bsp",
+		"source" : "components/lcd_bl_pwm_bsp"
+	}
+}
