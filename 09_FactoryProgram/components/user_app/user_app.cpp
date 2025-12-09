@@ -126,7 +126,9 @@ void display_image_from_sdcard(const char *path)
         }
         
         lv_obj_t *label = lv_label_create(img_container);
-        lv_label_set_text(label, "Error: 1.jpg not found\nPlease insert SD card\nwith 1.jpg file");
+        char error_msg[128];
+        snprintf(error_msg, sizeof(error_msg), "Error: Image not found\n%s\nPlease check SD card", path);
+        lv_label_set_text(label, error_msg);
         lv_obj_set_style_text_color(label, lv_color_hex(0xFF0000), 0);
         lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
         lv_obj_clear_flag(img_container, LV_OBJ_FLAG_HIDDEN);
