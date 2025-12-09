@@ -23,6 +23,8 @@ lv_ui user_ui;
 
 static const char *TAG_IMG = "ImageDisplay";
 static lv_obj_t *img_container = NULL;
+#define SDCARD_IMAGE_PATH "/sdcard/1.jpg"
+#define LVGL_PATH_MAX 128
 
 // LVGL POSIX filesystem driver functions
 static void * fs_open_cb(lv_fs_drv_t * drv, const char * path, lv_fs_mode_t mode)
@@ -56,7 +58,7 @@ static lv_fs_res_t fs_read_cb(lv_fs_drv_t * drv, void * file_p, void * buf, uint
     int *fd = (int *)file_p;
     int result = read(*fd, buf, btr);
     if(result < 0) return LV_FS_RES_UNKNOWN;
-    *br = result;
+    *br = (result >= 0) ? result : 0;  // Handle EOF (result == 0) and errors
     return LV_FS_RES_OK;
 }
 
@@ -76,8 +78,9 @@ static lv_fs_res_t fs_seek_cb(lv_fs_drv_t * drv, void * file_p, uint32_t pos, lv
 static lv_fs_res_t fs_tell_cb(lv_fs_drv_t * drv, void * file_p, uint32_t * pos_p)
 {
     int *fd = (int *)file_p;
-    *pos_p = lseek(*fd, 0, SEEK_CUR);
-    if(*pos_p < 0) return LV_FS_RES_UNKNOWN;
+    off_t pos = lseek(*fd, 0, SEEK_CUR);
+    if(pos < 0) return LV_FS_RES_UNKNOWN;
+    *pos_p = (uint32_t)pos;
     return LV_FS_RES_OK;
 }
 
@@ -150,8 +153,11 @@ void display_image_from_sdcard(const char *path)
     
     // Set image source using LVGL filesystem path
     // Format: "S:/sdcard/1.jpg" where S is the drive letter
-    char lvgl_path[64];
-    snprintf(lvgl_path, sizeof(lvgl_path), "S:%s", path);
+    char lvgl_path[LVGL_PATH_MAX];
+    int written = snprintf(lvgl_path, sizeof(lvgl_path), "S:%s", path);
+    if (written >= sizeof(lvgl_path)) {
+        ESP_LOGE(TAG_IMG, "Path too long, truncated");
+    }
     
     lv_img_set_src(img, lvgl_path);
     lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);
@@ -237,7 +243,7 @@ void example_button_task(void *arg)
     if(READ_BIT(even,0))    //单击 - Display image from SD card
     {
       ESP_LOGI(TAG_IMG, "Button single-click detected, displaying image");
-      display_image_from_sdcard("/sdcard/1.jpg");
+      display_image_from_sdcard(SDCARD_IMAGE_PATH);
     }
     else if(READ_BIT(even,1))  //双击
     {
