@@ -109,8 +109,29 @@ void display_image_from_sdcard(const char *path)
     struct stat st;
     if (stat(path, &st) != 0) {
         ESP_LOGE(TAG_IMG, "Image file not found: %s", path);
+        
+        // Show error message on screen
+        if (img_container == NULL) {
+            img_container = lv_obj_create(lv_scr_act());
+            lv_obj_set_size(img_container, LV_HOR_RES, LV_VER_RES);
+            lv_obj_align(img_container, LV_ALIGN_CENTER, 0, 0);
+            lv_obj_set_style_bg_color(img_container, lv_color_black(), 0);
+            lv_obj_set_style_border_width(img_container, 0, 0);
+            lv_obj_set_style_pad_all(img_container, 0, 0);
+        } else {
+            lv_obj_clean(img_container);
+        }
+        
+        lv_obj_t *label = lv_label_create(img_container);
+        lv_label_set_text(label, "Error: 1.jpg not found\nPlease insert SD card\nwith 1.jpg file");
+        lv_obj_set_style_text_color(label, lv_color_hex(0xFF0000), 0);
+        lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+        lv_obj_clear_flag(img_container, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_move_foreground(img_container);
         return;
     }
+    
+    ESP_LOGI(TAG_IMG, "Image file found, size: %ld bytes", st.st_size);
     
     // Create or reuse image container
     if (img_container == NULL) {
