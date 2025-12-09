@@ -156,7 +156,13 @@ void display_image_from_sdcard(const char *path)
     char lvgl_path[LVGL_PATH_MAX];
     int written = snprintf(lvgl_path, sizeof(lvgl_path), "S:%s", path);
     if (written >= sizeof(lvgl_path)) {
-        ESP_LOGE(TAG_IMG, "Path too long, truncated");
+        ESP_LOGE(TAG_IMG, "Path too long and was truncated, cannot load image");
+        lv_obj_del(img);
+        lv_obj_t *label = lv_label_create(img_container);
+        lv_label_set_text(label, "Error: Path too long");
+        lv_obj_set_style_text_color(label, lv_color_hex(0xFF0000), 0);
+        lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+        return;
     }
     
     lv_img_set_src(img, lvgl_path);
