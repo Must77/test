@@ -23,7 +23,7 @@ lv_ui user_ui;
 
 static const char *TAG_IMG = "ImageDisplay";
 static lv_obj_t *img_container = NULL;
-#define SDCARD_IMAGE_PATH "/sdcard/1.jpg"
+#define SDCARD_IMAGE_PATH "/sdcard/2.jpg"
 #define LVGL_PATH_MAX 128
 
 // LVGL POSIX filesystem driver functions
