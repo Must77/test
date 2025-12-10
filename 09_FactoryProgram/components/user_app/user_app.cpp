@@ -23,6 +23,8 @@ lv_ui user_ui;
 
 static const char *TAG_IMG = "ImageDisplay";
 static lv_obj_t *img_container = NULL;
+static lv_obj_t *red_screen_container = NULL;
+static bool showing_red_screen = false;
 #define SDCARD_IMAGE_PATH "/sdcard/1.jpg"
 #define LVGL_PATH_MAX 128
 
@@ -177,6 +179,64 @@ void display_image_from_sdcard(const char *path)
     ESP_LOGI(TAG_IMG, "Image display created successfully");
 }
 
+// Function to display red solid color screen
+void display_red_screen(void)
+{
+    ESP_LOGI(TAG_IMG, "Displaying red screen");
+    
+    // Create or reuse red screen container
+    if (red_screen_container == NULL) {
+        red_screen_container = lv_obj_create(lv_scr_act());
+        lv_obj_set_size(red_screen_container, LV_HOR_RES, LV_VER_RES);
+        lv_obj_align(red_screen_container, LV_ALIGN_CENTER, 0, 0);
+        lv_obj_set_style_bg_color(red_screen_container, lv_color_hex(0xFF0000), 0);
+        lv_obj_set_style_border_width(red_screen_container, 0, 0);
+        lv_obj_set_style_pad_all(red_screen_container, 0, 0);
+    }
+    
+    // Hide main UI carousel
+    if (user_ui.screen_carousel_1) {
+        lv_obj_add_flag(user_ui.screen_carousel_1, LV_OBJ_FLAG_HIDDEN);
+    }
+    
+    // Hide image container if exists
+    if (img_container != NULL) {
+        lv_obj_add_flag(img_container, LV_OBJ_FLAG_HIDDEN);
+    }
+    
+    // Show and bring red screen to front
+    lv_obj_clear_flag(red_screen_container, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_move_foreground(red_screen_container);
+    
+    showing_red_screen = true;
+    ESP_LOGI(TAG_IMG, "Red screen displayed successfully");
+}
+
+// Function to show main UI and hide red screen
+void show_main_ui(void)
+{
+    ESP_LOGI(TAG_IMG, "Showing main UI");
+    
+    // Hide red screen
+    if (red_screen_container != NULL) {
+        lv_obj_add_flag(red_screen_container, LV_OBJ_FLAG_HIDDEN);
+    }
+    
+    // Hide image container if exists
+    if (img_container != NULL) {
+        lv_obj_add_flag(img_container, LV_OBJ_FLAG_HIDDEN);
+    }
+    
+    // Show main UI carousel
+    if (user_ui.screen_carousel_1) {
+        lv_obj_clear_flag(user_ui.screen_carousel_1, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_move_foreground(user_ui.screen_carousel_1);
+    }
+    
+    showing_red_screen = false;
+    ESP_LOGI(TAG_IMG, "Main UI displayed successfully");
+}
+
 void user_color_task(void *arg);
 void example_user_task(void *arg);
 void example_sdcard_task(void *arg);
@@ -248,10 +308,14 @@ void example_button_task(void *arg)
   for(;;)
   {
     EventBits_t even = xEventGroupWaitBits(key_groups,even_set_bit,pdTRUE,pdFALSE,pdMS_TO_TICKS(2500));
-    if(READ_BIT(even,0))    //单击 - Display image from SD card
+    if(READ_BIT(even,0))    //单击 - Toggle between main UI and red screen
     {
-      ESP_LOGI(TAG_IMG, "Button single-click detected, displaying image");
-      display_image_from_sdcard(SDCARD_IMAGE_PATH);
+      ESP_LOGI(TAG_IMG, "Button single-click detected, toggling display");
+      if (showing_red_screen) {
+        show_main_ui();
+      } else {
+        display_red_screen();
+      }
     }
     else if(READ_BIT(even,1))  //双击
     {
