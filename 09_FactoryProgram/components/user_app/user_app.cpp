@@ -308,7 +308,7 @@ void example_button_task(void *arg)
   for(;;)
   {
     EventBits_t even = xEventGroupWaitBits(key_groups,even_set_bit,pdTRUE,pdFALSE,pdMS_TO_TICKS(2500));
-    if(READ_BIT(even,0))    //单击 - Toggle between main UI and red screen
+    if(READ_BIT(even,0))    //单击 - 在主界面和红色屏幕之间切换 (Toggle between main UI and red screen)
     {
       ESP_LOGI(TAG_IMG, "Button single-click detected, toggling display");
       if (showing_red_screen) {
